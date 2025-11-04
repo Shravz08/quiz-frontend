@@ -6,6 +6,7 @@
     <title>Quiz App</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
 
@@ -13,21 +14,36 @@
         <div id="start-page">
             <h1>Welcome to the Quiz App!</h1>
             <p>Test your knowledge and see how well you score.</p>
-            <button id="start-btn" onclick="startQuiz()">Start Quiz</button>
+           <button id="start-btn" onclick="goToSubjects()">Start Quiz</button>
+
         </div>
 
-        <!-- 🟡 Quiz Page -->
-        <div id="quiz-box" style="display:none;">
-            <h2 id="question">Loading question...</h2>
-            <div id="options"></div>
-            <button id="next-btn" onclick="nextQuestion()">Next</button>
-        </div>
+       <!-- 🟡 Subject Selection Page -->
+    <div id="subject-page" style="display:none;">
+      <h2>Select a Subject</h2>
+      <div id="subjects">
+        <button onclick="selectSubject('java')">Java</button>
+        <button onclick="selectSubject('iot')">IoT</button>
+        <button onclick="selectSubject('html')">HTML</button>
+      </div>
+    </div>
+        
+    <!-- 🔵 Quiz Page -->
+    <div id="quiz-box" style="display:none;">
+      <div id="progress-container">
+        <div id="progress-bar"></div>
+      </div>
+      <h3 id="progress-text"></h3>
+      <h2 id="question">Loading question...</h2>
+      <div id="options"></div>
+      <button id="next-btn" onclick="nextQuestion()">Next</button>
+    </div>
 
-        <!-- 🔵 Score Page -->
-        <div id="score-box" style="display:none;">
-            <h2>Your Score: <span id="score"></span></h2>
-            <button onclick="restartQuiz()">Restart</button>
-        </div>
+	 <!-- 🟣 Score Page -->
+    <div id="score-box" style="display:none;">
+      <h2>Your Score: <span id="score"></span></h2>
+      <button onclick="restartQuiz()">Restart</button>
+    </div>
 
     </div>
     <script src="script.js"></script>

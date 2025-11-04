@@ -80,4 +80,80 @@ h1 {
 #start-btn:hover, #next-btn:hover, #score-box button:hover {
     background-color: #1976D2;
 }
+/* Progress bar */
+#progress-container {
+    width: 100%;
+    background: #ddd;
+    border-radius: 5px;
+    height: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+#progress-bar {
+    height: 10px;
+    width: 0%;
+    background: #4CAF50;
+    transition: width 0.4s ease;
+}
+#progress-text {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
 
+/* Improve alignment and spacing */
+#quiz-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#progress-container {
+    width: 90%;
+    background: #ddd;
+    border-radius: 5px;
+    height: 10px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+#progress-text {
+    font-size: 15px;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+#question {
+    margin: 15px 0;
+    font-size: 18px;
+}
+
+#options {
+    width: 100%;
+    text-align: left;
+}
+
+#options button {
+    width: 90%;
+    margin: 8px auto;
+    display: block;
+}
+
+#next-btn {
+    margin-top: 15px;
+    width: 120px;
+}
+
+#subjects button {
+  background-color: #2196F3;
+  color: white;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#subjects button:hover {
+  background-color: #1976D2;
+}
