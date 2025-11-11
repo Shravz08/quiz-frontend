@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getAllQuestionsBySubject } from "../services/QuestionService"; // ✅ we’ll create this file next
 
-const quizData = {
+const localQuizData = {
   java: [
     { question: "What does JVM stand for?", options: ["Java Virtual Machine", "Java Variable Method", "Just Virtual Machine", "Java Verified Mode"], answer: 0 },
     { question: "Which company developed Java?", options: ["Microsoft", "Sun Microsystems", "Google", "IBM"], answer: 1 },
@@ -19,10 +20,35 @@ const quizData = {
 };
 
 function QuizPage({ subject, onFinish }) {
+  const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const questions = quizData[subject];
+  // ✅ Fetch from backend
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const data = await getAllQuestionsBySubject(subject); // e.g. /api/questions/java
+        if (data && data.length > 0) {
+          setQuestions(data);
+        } else {
+          setQuestions(localQuizData[subject] || []);
+        }
+      } catch (err) {
+        console.error("Error fetching questions:", err);
+        setQuestions(localQuizData[subject] || []);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [subject]);
+
+  if (loading) return <p>Loading quiz...</p>;
+  if (!questions || questions.length === 0) return <p>No questions available.</p>;
+
   const current = questions[index];
 
   const handleAnswer = (i) => {

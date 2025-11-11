@@ -1,68 +1,109 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
+  margin: 0;
+  padding: 0;
+  color: #222;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
-.container {
+.app-container {
   background: white;
+  border-radius: 16px;
   padding: 30px;
-  border-radius: 10px;
-  width: 400px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 600px;
+  max-width: 90%;
   text-align: center;
 }
 
-h1, h2 {
+.title {
+  font-size: 2rem;
   color: #333;
+  margin-bottom: 20px;
 }
 
-.btn {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  border: none;
-  background-color: #2196F3;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+.loading {
+  font-size: 1.2rem;
+  color: #666;
 }
 
-.btn:hover {
-  background-color: #1976D2;
-  transform: scale(1.05);
+.quiz-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-#subjects button {
-  background-color: #4CAF50;
+.question-card {
+  background: #f5f7fa;
+  border-radius: 12px;
+  padding: 15px;
+  transition: 0.3s;
 }
 
-#subjects button:hover {
-  background-color: #45a049;
+.question-card:hover {
+  background: #eef2f7;
 }
 
-.progress-bar {
-  width: 100%;
-  background: #ddd;
-  border-radius: 5px;
-  height: 10px;
+.question {
+  font-weight: 600;
+  color: #222;
   margin-bottom: 10px;
-  overflow: hidden;
 }
 
-.progress-fill {
-  height: 10px;
-  background: #4CAF50;
-  width: 0%;
-  transition: width 0.3s ease;
+.options-list {
+  list-style: none;
+  padding: 0;
 }
 
-#score-box h2 {
+.option {
+  background: #ffffff;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 6px 0;
+  transition: 0.2s;
+}
+
+.option:hover {
+  background: #d1e7ff;
+  border-color: #4a90e2;
+  cursor: pointer;
+}
+
+.selected {
+  background: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.next-btn {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.next-btn:hover {
+  background-color: #357ABD;
+}
+
+.progress {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.score-text {
+  font-size: 1.3rem;
   color: #333;
-  font-size: 22px;
+  margin: 20px 0;
 }
