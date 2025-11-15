@@ -1,14 +1,25 @@
 import React from "react";
+import "./SubjectPage.css";
 
 const SubjectSelection = ({ quizData, onSelect }) => {
+  if (!quizData) {
+    return <h2 style={{ textAlign: "center" }}>Loading subjects...</h2>;
+  }
+
   return (
-    <div id="subject-page">
-      <h2>Select a Subject</h2>
-      <div id="subjects">
-        {Object.keys(quizData).map((subject, index) => (
-          <button key={index} onClick={() => onSelect(subject)}>
-            {subject.toUpperCase()}
-          </button>
+    <div className="subject-container">
+      <h1 className="subject-title">Choose a Subject 📚</h1>
+
+      <div className="subject-grid">
+        {Object.keys(quizData || {}).map((subject, index) => (
+          <div
+            key={index}
+            className="subject-card"
+            onClick={() => onSelect(subject)}
+          >
+            <div className="subject-icon">📘</div>
+            <h3>{subject.toUpperCase()}</h3>
+          </div>
         ))}
       </div>
     </div>

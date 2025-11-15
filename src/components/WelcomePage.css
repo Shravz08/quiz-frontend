@@ -1,0 +1,61 @@
+/* Full screen center layout */
+.welcome-container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #7b61ff, #6ec6ff);
+  font-family: "Poppins", sans-serif;
+}
+
+/* Card */
+.welcome-card {
+  background: white;
+  padding: 40px 35px;
+  border-radius: 22px;
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+/* Title */
+.welcome-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Subtitle */
+.welcome-text {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  color: #555;
+}
+
+/* Button */
+.start-btn {
+  padding: 12px 20px;
+  width: 100%;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 12px;
+  background: #6a5af9;
+  color: white;
+  cursor: pointer;
+  transition: 0.25s ease;
+  font-weight: 500;
+}
+
+.start-btn:hover {
+  background: #4b3df3;
+  transform: translateY(-2px);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

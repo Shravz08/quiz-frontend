@@ -1,44 +1,105 @@
-import React, { useState } from "react";
-import quizData from "./data/quizData";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getQuizById } from "../services/QuizService";
+import "./QuizPage.css";
 
-function QuizPage({ subject, onFinish }) {
-  const [index, setIndex] = useState(0);
+const QuizPage = () => {
+  const { id } = useParams();
+
+  const [quiz, setQuiz] = useState(null);
+  const [current, setCurrent] = useState(0);
+  const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
+  const [finished, setFinished] = useState(false);
 
-  const questions = quizData[subject];
-  const current = questions[index];
-  const progress = ((index + 1) / questions.length) * 100;
+  useEffect(() => {
+    const loadQuiz = async () => {
+      const data = await getQuizById(id);
+      setQuiz(data);
+    };
+    loadQuiz();
+  }, [id]);
 
-  const handleAnswer = (i) => {
-    const isCorrect = i === current.answer;
-    if (isCorrect) setScore((prev) => prev + 1);
+  if (!quiz) return <p className="loading-text">Loading Quiz...</p>;
 
-    if (index + 1 < questions.length) {
-      setIndex(index + 1);
+  const question = quiz.questions[current];
+
+  const handleSelect = (index) => {
+    setSelected(index);
+  };
+
+  const handleNext = () => {
+    if (selected === null) return alert("Please select an option!");
+
+    if (selected === question.answer) {
+      setScore((prev) => prev + 1);
+    }
+
+    setSelected(null);
+
+    if (current + 1 < quiz.questions.length) {
+      setCurrent(current + 1);
     } else {
-      onFinish(score + (isCorrect ? 1 : 0));
+      setFinished(true);
     }
   };
 
-  return (
-    <div className="page">
-      <h3>
-        Question {index + 1} of {questions.length}
-      </h3>
-
-      <div className="progress-bar">
-        <div className="progress-fill" style={{ width: progress + "%" }}></div>
-      </div>
-
-      <h2>{current.question}</h2>
-
-      {current.options.map((opt, i) => (
-        <button key={i} onClick={() => handleAnswer(i)}>
-          {opt}
+  if (finished) {
+    return (
+      <div className="result-screen">
+        <h1>Quiz Finished 🎉</h1>
+        <p>
+          Your Score: <span>{score}</span> / {quiz.questions.length}
+        </p>
+        <button onClick={() => window.location.reload()} className="retry-btn">
+          Retry Quiz
         </button>
-      ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="quizpage-container">
+      <div className="quiz-card">
+
+        {/* Progress */}
+        <div className="progress-text">
+          Question {current + 1} / {quiz.questions.length}
+        </div>
+
+        {/* Progress bar */}
+        <div className="progress-bar">
+          <div
+            className="progress-fill"
+            style={{
+              width: `${((current + 1) / quiz.questions.length) * 100}%`,
+            }}
+          ></div>
+        </div>
+
+        {/* Question */}
+        <h2 className="question-text">{question.text}</h2>
+
+        {/* Options */}
+        <div className="options-container">
+          {question.options.map((opt, idx) => (
+            <div
+              key={idx}
+              className={`option-box ${selected === idx ? "selected" : ""}`}
+              onClick={() => handleSelect(idx)}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+
+        {/* Next Button */}
+        <button className="next-btn" onClick={handleNext}>
+          {current + 1 === quiz.questions.length ? "Finish Quiz" : "Next ➜"}
+        </button>
+      </div>
     </div>
   );
-}
+};
 
 export default QuizPage;

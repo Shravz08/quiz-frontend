@@ -1,99 +1,98 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
+import WelcomePage from "./components/WelcomePage";
+import SubjectPage from "./components/SubjectPage";
+import QuizPage from "./components/QuizPage";
+import ResultPage from "./components/ResultPage";
+import SignupPage from "./components/SignupPage";
+import LoginPage from "./components/LoginPage";
+import QuizList from "./components/QuizList";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./components/Dashboard";
+import ProfilePage from "./components/ProfilePage";
+import QuizListPage from "./components/QuizListPage";
+
+import MainLayout from "./components/MainLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { getCurrentUser } from "./services/AuthService";
 import "./App.css";
 
 function App() {
-  const [questions, setQuestions] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [showScore, setShowScore] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  // current logged-in user (from localStorage via AuthService)
+  const [user, setUser] = useState(getCurrentUser());
 
-  // Fetch questions dynamically from backend
+  // quizzes loaded from backend (array)
+  const [quizzes, setQuizzes] = useState(null);
+  const [loadingQuizzes, setLoadingQuizzes] = useState(true);
+
+  // Fetch quiz list once (used by QuizListPage and SubjectPage grouping)
   useEffect(() => {
-    fetch("http://localhost:8082/api/questions")
-      .then((response) => response.json())
-      .then((data) => setQuestions(data))
-      .catch((error) => console.error("Error fetching questions:", error));
+    const loadQuizzes = async () => {
+      try {
+        const res = await fetch("http://localhost:8082/api/quizzes");
+        if (!res.ok) throw new Error("Failed to load quizzes");
+        const data = await res.json();
+        setQuizzes(data); // expected array of quiz objects: { id, title, subject, description, ... }
+      } catch (err) {
+        console.error("Error fetching quizzes:", err);
+        setQuizzes([]); // fallback to empty array to avoid crashes
+      } finally {
+        setLoadingQuizzes(false);
+      }
+    };
+
+    loadQuizzes();
   }, []);
 
-  const handleOptionClick = (optionIndex) => {
-    setSelectedOption(optionIndex);
-  };
-
-  const handleNext = () => {
-    if (selectedOption === null) return alert("Please select an answer!");
-
-    const currentQuestion = questions[currentIndex];
-    if (selectedOption === currentQuestion.answer) {
-      setScore(score + 1);
-    }
-
-    setSelectedOption(null);
-
-    if (currentIndex + 1 < questions.length) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setShowScore(true);
-    }
-  };
-
-  const restartQuiz = () => {
-    setScore(0);
-    setCurrentIndex(0);
-    setShowScore(false);
-    setSelectedOption(null);
-  };
-
-  if (questions.length === 0) {
-    return <p className="loading">Loading questions...</p>;
-  }
-
-  if (showScore) {
-    return (
-      <div className="app-container">
-        <h1 className="title">Quiz Completed 🎉</h1>
-        <p className="score-text">
-          You scored <strong>{score}</strong> out of <strong>{questions.length}</strong>
-        </p>
-        <button className="next-btn" onClick={restartQuiz}>
-          Restart Quiz
-        </button>
-      </div>
-    );
-  }
-
-  const currentQuestion = questions[currentIndex];
+  // Build a subject->quiz mapping to pass into SubjectPage (safe even when quizzes is null)
+  const quizData = React.useMemo(() => {
+    if (!quizzes) return null;
+    const map = {};
+    quizzes.forEach((q) => {
+      const subj = q.subject || "General";
+      if (!map[subj]) map[subj] = [];
+      map[subj].push(q);
+    });
+    return map;
+  }, [quizzes]);
 
   return (
-    <div className="app-container">
-      <h1 className="title">Java Quiz App</h1>
-      <div className="question-card">
-        <h3 className="question">
-          {currentIndex + 1}. {currentQuestion.question}
-        </h3>
-        <ul className="options-list">
-          {currentQuestion.options.map((opt, i) => (
-            <li
-              key={i}
-              className={`option ${
-                selectedOption === i
-                  ? "selected"
-                  : ""
-              }`}
-              onClick={() => handleOptionClick(i)}
-            >
-              {opt}
-            </li>
-          ))}
-        </ul>
-        <button className="next-btn" onClick={handleNext}>
-          {currentIndex + 1 === questions.length ? "Finish Quiz" : "Next Question →"}
-        </button>
-      </div>
-      <p className="progress">
-        Question {currentIndex + 1} / {questions.length}
-      </p>
-    </div>
+    <Router>
+      <Routes>
+        {/* Public routes (no sidebar) */}
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage setUser={setUser} />} />
+        <Route path="/forgot" element={<LoginPage />} />
+
+        {/* Routes that require auth — these render inside MainLayout (Sidebar visible) */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <MainLayout /> {/* MainLayout renders Sidebar and an <Outlet /> for nested routes */}
+            </ProtectedRoute>
+          }
+        >
+          {/* These nested routes will show the sidebar */}
+          <Route path="/dashboard" element={<Dashboard user={user} />} />
+          <Route
+            path="/subjects"
+            element={
+              // pass quizData and a simple onSelect that navigates inside SubjectPage if needed
+              <SubjectPage quizData={quizData} loading={loadingQuizzes} />
+            }
+          />
+          <Route path="/quizlist" element={<QuizListPage quizzes={quizzes} loading={loadingQuizzes} />} />
+          <Route path="/profile" element={<ProfilePage user={user} setUser={setUser} />} />
+          <Route path="/quiz/:id" element={<QuizPage />} />
+          <Route path="/result" element={<ResultPage />} />
+        </Route>
+
+        {/* Fallback: any unknown route -> redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 }
 
