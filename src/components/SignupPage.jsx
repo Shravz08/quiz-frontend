@@ -1,76 +1,71 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../api/axios";
 
 function SignupPage() {
-
-  // 1️⃣ State Variables
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
   // 2️⃣ Signup Handler (Called on button click)
   const handleSignup = async (e) => {
     e.preventDefault();
 
     // Validate
-    if (!name || !email || !password) {
+    if (!user.username || !user.email || !user.password) {
       toast.error("All fields are required!");
       return;
     }
 
-    try {
-      const response = await fetch("http://localhost:8080/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
 
-      if (response.ok) {
-        toast.success("Signup Successful! You can now login.");
-        // later we will redirect to login page
-      } else {
-        toast.error("User already exists or invalid data!");
-      }
-    } catch (error) {
-      toast.error("Backend connection error!");
+    try {
+      const res = await api.post("/auth/signup", user);
+      console.log("Signup successful:", res.data);
+
+      alert("Account created! Now login.");
+      window.location.href = "/login";
+
+    } catch (err) {
+      console.error(err);
+      alert("Signup failed!");
     }
   };
 
+
   return (
-    <div className="signup-page">
-      <h2>Create Account</h2>
+    <div>
+      <h2>Signup</h2>
 
-      {/* 3️⃣ FORM */}
       <form onSubmit={handleSignup}>
-
         <input
           type="text"
-          placeholder="Enter Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="Name"
+          value={user.name}
+          onChange={(e) => setUser({ ...user, username: e.target.value })}
         />
 
         <input
           type="email"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          value={user.email}
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
         />
 
         <input
           type="password"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          value={user.password}
+          onChange={(e) =>
+            setUser({ ...user, password: e.target.value })
+          }
         />
 
-        <button type="submit">Sign Up</button>
+        <button type="submit">Signup</button>
       </form>
-
-      <ToastContainer />
     </div>
   );
 }
-
 export default SignupPage;

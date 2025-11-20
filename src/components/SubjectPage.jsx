@@ -19,6 +19,7 @@ const SubjectSelection = ({ quizData, onSelect }) => {
           >
             <div className="subject-icon">📘</div>
             <h3>{subject.toUpperCase()}</h3>
+            <button onClick={logout}>Logout</button>
           </div>
         ))}
       </div>

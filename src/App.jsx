@@ -25,6 +25,10 @@ function App() {
   // quizzes loaded from backend (array)
   const [quizzes, setQuizzes] = useState(null);
   const [loadingQuizzes, setLoadingQuizzes] = useState(true);
+  const logout = () => {
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+};
 
   // Fetch quiz list once (used by QuizListPage and SubjectPage grouping)
   useEffect(() => {

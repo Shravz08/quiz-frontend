@@ -1,63 +1,83 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../api/axios";
+import "./Login.css"; // <-- Make sure this file contains your CSS
 
 function LoginPage() {
+  const [loginData, setLoginData] = useState({
+    username: "",
+    password: "",
+  });
 
-  // 1️⃣ STATE FOR EMAIL & PASSWORD
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  // 2️⃣ LOGIN FUNCTION (CALLED ON BUTTON CLICK)
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      toast.error("All fields are required!");
+    if (!loginData.username || !loginData.password) {
+      toast.error("Both fields are required!");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await api.post("/auth/login", loginData);
 
-      if (response.ok) {
-        toast.success("Login Successful!");
-        // redirect later or store token
-      } else {
-        toast.error("Invalid Email or Password!");
-      }
-    } catch (error) {
-      toast.error("Backend not connected!");
+      // Save token
+      localStorage.setItem("token", res.data);
+
+      toast.success("Login successful!");
+      window.location.href = "/subjects"; 
+
+    } catch (err) {
+      toast.error("Invalid username or password");
     }
   };
 
   return (
-    <div className="login-page">
-      <h2>Login</h2>
+    <div className="login-container">
 
-      {/* 3️⃣ FORM SUBMIT HANDLES LOGIN */}
-      <form onSubmit={handleLogin}>
+      <div className="login-card">
+        <h2 className="title">Login</h2>
+        <p className="subtitle">Welcome back! Please login.</p>
 
-        <input
-          type="email"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <form onSubmit={handleLogin}>
 
-        <input
-          type="password"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <div className="input-box">
+            <label>Username</label>
+            <input
+              type="text"
+              placeholder="Enter username"
+              value={loginData.username}
+              onChange={(e) =>
+                setLoginData({ ...loginData, username: e.target.value })
+              }
+            />
+          </div>
 
-        <button type="submit">Login</button>
-      </form>
+          <div className="input-box">
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="Enter password"
+              value={loginData.password}
+              onChange={(e) =>
+                setLoginData({ ...loginData, password: e.target.value })
+              }
+            />
+          </div>
+
+          <button className="login-btn" type="submit">
+            Login
+          </button>
+        </form>
+
+        <p className="signup-text">
+          Don’t have an account?{" "}
+          <span onClick={() => (window.location.href = "/signup")}>
+            Register
+          </span>
+        </p>
+
+      </div>
 
       <ToastContainer />
     </div>
