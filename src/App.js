@@ -1,9 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import SubjectPage from "./pages/SubjectPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import WelcomePage from "./components/WelcomePage";
 import SubjectPage from "./components/SubjectPage";
@@ -13,15 +10,12 @@ import SignupPage from "./components/SignupPage";
 import LoginPage from "./components/LoginPage";
 
 function App() {
-  const isLoggedIn = () => {
-    return !!localStorage.getItem("token");
-  };
+  const isLoggedIn = () => !!localStorage.getItem("token");
 
   return (
-    <Router>
-      <BrowserRouter>
+    <BrowserRouter>
       <Routes>
-        
+        {/* Public routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
 
@@ -34,30 +28,27 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        <Route
-          path="/subjects"
-          element={
-            isLoggedIn() ? <SubjectPage /> : <Navigate to="/login" />
-          }
-        />
-
         <Route
           path="/quiz/:subject"
           element={
-            isLoggedIn() ? <QuizPage /> : <Navigate to="/login" />
+            <ProtectedRoute>
+              <QuizPage />
+            </ProtectedRoute>
           }
         />
-
         <Route
           path="/result"
           element={
-            isLoggedIn() ? <ResultPage /> : <Navigate to="/login" />
+            <ProtectedRoute>
+              <ResultPage />
+            </ProtectedRoute>
           }
         />
-           </Routes>
+
+        {/* Default route */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
     </BrowserRouter>
-    </Router>
   );
 }
 
