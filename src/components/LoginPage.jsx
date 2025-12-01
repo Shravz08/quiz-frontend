@@ -1,28 +1,23 @@
 import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import api from "../api/axios";
-import "./Login.css";
+import { ToastContainer, toast } from "react-toastify";
 
 function LoginPage() {
-  const [loginData, setLoginData] = useState({
+  const [data, setData] = useState({
     username: "",
     password: "",
   });
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent page reload
-
+    e.preventDefault();
     try {
-      const res = await api.post("/api/auth/login", loginData);
+      const res = await api.post("/api/auth/login", data);
 
-      // Save token in localStorage
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", res.data.token); // Save token
 
       toast.success("Login successful!");
-      window.location.href = "/subjects"; // Redirect to subjects page
+      window.location.href = "/subjects";
     } catch (err) {
-      console.error(err);
       toast.error("Invalid username or password");
     }
   };
@@ -30,47 +25,29 @@ function LoginPage() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h2 className="title">Login</h2>
-        <p className="subtitle">Welcome back! Please login.</p>
+        <h2>Login</h2>
 
         <form onSubmit={handleLogin}>
-          <div className="input-box">
-            <label>Username</label>
-            <input
-              type="text"
-              placeholder="Enter username"
-              value={loginData.username}
-              onChange={(e) =>
-                setLoginData({ ...loginData, username: e.target.value })
-              }
-            />
-          </div>
+          <input
+            type="text"
+            value={data.username}
+            placeholder="Username"
+            onChange={(e) =>
+              setData({ ...data, username: e.target.value })
+            }
+          />
+          <input
+            type="password"
+            value={data.password}
+            placeholder="Password"
+            onChange={(e) =>
+              setData({ ...data, password: e.target.value })
+            }
+          />
 
-          <div className="input-box">
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Enter password"
-              value={loginData.password}
-              onChange={(e) =>
-                setLoginData({ ...loginData, password: e.target.value })
-              }
-            />
-          </div>
-
-          <button className="login-btn" type="submit">
-            Login
-          </button>
+          <button type="submit">Login</button>
         </form>
-
-        <p className="signup-text">
-          Don’t have an account?{" "}
-          <span onClick={() => (window.location.href = "/signup")}>
-            Register
-          </span>
-        </p>
       </div>
-
       <ToastContainer />
     </div>
   );

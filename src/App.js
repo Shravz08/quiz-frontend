@@ -10,7 +10,7 @@ import SignupPage from "./components/SignupPage";
 import LoginPage from "./components/LoginPage";
 
 function App() {
-  const isLoggedIn = () => !!localStorage.getItem("token");
+ // const isLoggedIn = () => !!localStorage.getItem("token");
 
   return (
     <BrowserRouter>

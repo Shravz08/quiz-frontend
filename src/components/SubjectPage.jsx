@@ -1,30 +1,36 @@
-import React from "react";
-import "./SubjectPage.css";
+import React, { useEffect, useState } from "react";
+import api from "../api/axios";
 
-const SubjectSelection = ({ quizData, onSelect }) => {
-  if (!quizData) {
-    return <h2 style={{ textAlign: "center" }}>Loading subjects...</h2>;
-  }
+function SubjectPage() {
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    api
+      .get("/subjects")
+      .then((res) => setSubjects(res.data))
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
-    <div className="subject-container">
-      <h1 className="subject-title">Choose a Subject 📚</h1>
+    <div>
+      <h2>Select Subject</h2>
 
-      <div className="subject-grid">
-        {Object.keys(quizData || {}).map((subject, index) => (
-          <div
-            key={index}
-            className="subject-card"
-            onClick={() => onSelect(subject)}
-          >
-            <div className="subject-icon">📘</div>
-            <h3>{subject.toUpperCase()}</h3>
-            <button onClick={logout}>Logout</button>
-          </div>
-        ))}
-      </div>
+      {subjects.map((sub) => (
+        <div
+          key={sub}
+          onClick={() => (window.location.href = `/quiz/${sub}`)}
+          style={{
+            border: "1px solid #ddd",
+            padding: "10px",
+            margin: "10px",
+            cursor: "pointer",
+          }}
+        >
+          {sub}
+        </div>
+      ))}
     </div>
   );
-};
+}
 
-export default SubjectSelection;
+export default SubjectPage;

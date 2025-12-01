@@ -63,3 +63,132 @@ h2 {
   cursor: pointer;
   font-weight: bold;
 }
+
+/* ===== Global Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #20c997, #0ca678);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== Container ===== */
+.signup-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== Card ===== */
+.signup-card {
+  width: 380px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  padding: 30px 35px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeUp 0.6s ease;
+}
+
+/* ===== Titles ===== */
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  color: #eee;
+  margin-bottom: 20px;
+}
+
+/* ===== Input Box ===== */
+.input-box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.input-box label {
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.input-box input {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.input-box input::placeholder {
+  color: #eee;
+}
+
+.input-box input:focus {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+/* ===== Signup Button ===== */
+.signup-btn {
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  color: #20c997;
+  border: none;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.signup-btn:hover {
+  background: #e5e5e5;
+}
+
+/* ===== Login Redirect ===== */
+.login-text {
+  text-align: center;
+  color: #fff;
+  margin-top: 15px;
+}
+
+.login-text span {
+  color: #ffe066;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.login-text span:hover {
+  color: #ffd43b;
+}
+
+/* ===== Animation ===== */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
