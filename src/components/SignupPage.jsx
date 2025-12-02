@@ -1,53 +1,37 @@
 import React, { useState } from "react";
 import api from "../api/axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-function SignupPage() {
-  const [data, setData] = useState({
-    username: "",
-    password: "",
-  });
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post("/api/auth/signup", data);
-      toast.success("Signup successful! Please login.");
-      window.location.href = "/login";
-    } catch (err) {
-      toast.error("Signup failed");
-    }
-  };
+export default function Signup(){
+const [form, setForm] = useState({ username:'', password:'' });
+const navigate = useNavigate();
 
-  return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2>Sign Up</h2>
 
-        <form onSubmit={handleSignup}>
-          <input
-            type="text"
-            placeholder="Username"
-            value={data.username}
-            onChange={(e) =>
-              setData({ ...data, username: e.target.value })
-            }
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={data.password}
-            onChange={(e) =>
-              setData({ ...data, password: e.target.value })
-            }
-          />
-
-          <button type="submit">Sign Up</button>
-        </form>
-      </div>
-      <ToastContainer />
-    </div>
-  );
+const handleSubmit = async (e) =>{
+e.preventDefault();
+try{
+await api.post('/api/auth/register', form);
+toast.success('Account created');
+setTimeout(()=>navigate('/login'),1000);
+}catch(err){
+toast.error('Signup failed');
 }
+};
 
-export default SignupPage;
+
+return (
+<div className="min-h-[80vh] flex items-center justify-center">
+<div className="w-full max-w-md bg-white p-8 rounded-lg shadow">
+<h2 className="text-2xl font-bold mb-4">Create account</h2>
+<form onSubmit={handleSubmit} className="space-y-4">
+<input value={form.username} onChange={e=>setForm({...form, username:e.target.value})} placeholder="Username" className="w-full p-3 border rounded" />
+<input value={form.password} onChange={e=>setForm({...form, password:e.target.value})} placeholder="Password" type="password" className="w-full p-3 border rounded" />
+<button type="submit" className="w-full bg-green-600 text-white p-3 rounded">Sign up</button>
+</form>
+<ToastContainer position="top-right" />
+</div>
+</div>
+);
+}

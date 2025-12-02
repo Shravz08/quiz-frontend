@@ -1,36 +1,31 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
-function SubjectPage() {
-  const [subjects, setSubjects] = useState([]);
 
-  useEffect(() => {
-    api
-      .get("/subjects")
-      .then((res) => setSubjects(res.data))
-      .catch((err) => console.log(err));
-  }, []);
+export default function Subjects(){
+const [subjects, setSubjects] = useState([]);
+const navigate = useNavigate();
 
-  return (
-    <div>
-      <h2>Select Subject</h2>
 
-      {subjects.map((sub) => (
-        <div
-          key={sub}
-          onClick={() => (window.location.href = `/quiz/${sub}`)}
-          style={{
-            border: "1px solid #ddd",
-            padding: "10px",
-            margin: "10px",
-            cursor: "pointer",
-          }}
-        >
-          {sub}
-        </div>
-      ))}
-    </div>
-  );
+useEffect(()=>{
+api.get('/subjects')
+.then(res=> setSubjects(res.data))
+.catch(err=> console.error(err));
+},[]);
+
+
+return (
+<div className="max-w-5xl mx-auto p-6">
+<h2 className="text-2xl font-semibold mb-4">Subjects</h2>
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+{subjects.map((s)=> (
+<div key={s} className="p-4 bg-white rounded shadow cursor-pointer hover:shadow-lg" onClick={()=>navigate(`/quiz/${s}`)}>
+<h3 className="text-lg font-medium">{s}</h3>
+<p className="text-sm text-gray-500">Tap to start quiz</p>
+</div>
+))}
+</div>
+</div>
+);
 }
-
-export default SubjectPage;

@@ -1,93 +1,18 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
-function ProfilePage() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState("Shravani");
-  const [email, setEmail] = useState("shravani@example.com");
-  const [showToast, setShowToast] = useState(false);
-
-  const handleSave = () => {
-    setIsEditing(false);
-  };
-
-  const handleLogout = () => {
-    setShowToast(true);
-
-    setTimeout(() => {
-      setShowToast(false);
-      window.location.href = "/login"; // Redirect to login page
-    }, 1500);
-  };
-
+export default function ProfilePage() {
   return (
-    <div className="profile-wrapper">
-      {/* Toast */}
-      <AnimatePresence>
-        {showToast && (
-          <motion.div
-            className="toast"
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.4 }}
-          >
-            Logged out successfully!
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="min-h-screen bg-gray-50 p-10 flex flex-col items-center">
+      <div className="bg-white shadow-xl rounded-2xl p-8 max-w-md w-full">
+        <h2 className="text-2xl font-semibold mb-6 text-center">Your Profile</h2>
 
-      <motion.div
-        className="profile-card"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-      >
-        <div className="avatar">
-          <span>{name.charAt(0).toUpperCase()}</span>
+        <div className="space-y-4">
+          <p><strong>Name:</strong> John Doe</p>
+          <p><strong>Email:</strong> johndoe@example.com</p>
         </div>
 
-        {!isEditing ? (
-          <>
-            <h2>{name}</h2>
-            <p className="email">{email}</p>
-
-            <button className="edit-btn" onClick={() => setIsEditing(true)}>
-              Edit Profile
-            </button>
-
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <input
-              className="input-box"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter Name"
-            />
-            <input
-              className="input-box"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter Email"
-            />
-            <button className="save-btn" onClick={handleSave}>
-              Save
-            </button>
-          </>
-        )}
-
-        <div className="stats">
-          <h3>Your Stats</h3>
-          <p>Quizzes Taken: <strong>12</strong></p>
-          <p>Highest Score: <strong>9/10</strong></p>
-          <p>Average Score: <strong>7.4</strong></p>
-        </div>
-      </motion.div>
+        <button className="mt-6 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl">
+          Edit Profile
+        </button>
+      </div>
     </div>
   );
 }
-
-export default ProfilePage;
