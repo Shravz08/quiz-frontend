@@ -1,75 +1,80 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Pages (from /src/pages)
-import Home from "./pages/Home";
-import QuizPage from "./pages/QuizPage";
-import AdminPage from "./pages/AdminPage";
-import UserPage from "./pages/UserPage";
-
-// Components (from /src/components)
+// Pages from Components folder
+import LandingPage from "./components/LandingPage";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
-import SubjectPage from "./components/SubjectPage";
+import Dashboard from "./components/Dashboard";
+import ProfilePage from "./components/ProfilePage";
+import QuizListPage from "./components/QuizListPage";
+import QuizPage from "./components/QuizPage";
 import ResultPage from "./components/ResultPage";
+import SubjectPage from "./components/SubjectPage";
+import ForgotPassword from "./components/ForgotPassword";
+import WelcomePage from "./components/WelcomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
-  const isLoggedIn = () => {
-    return !!localStorage.getItem("token");
-  };
+// Pages folder
+import Home from "./pages/Home";
+import UserPage from "./pages/UserPage";
+import AdminPage from "./pages/AdminPage";
 
+export default function App() {
   return (
-    <Router basename="/quiz-frontend">
+    <Router basename="/">   {/* << FIXED HERE */}
       <Routes>
-
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
+        {/* Public Pages */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Protected Routes */}
+        {/* Protected Pages */}
+        <Route
+          path="/dashboard"
+          element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+        />
+        <Route
+          path="/profile"
+          element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}
+        />
+
         <Route
           path="/subjects"
-          element={
-            <ProtectedRoute>
-              <SubjectPage />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><SubjectPage /></ProtectedRoute>}
         />
 
         <Route
-          path="/quiz/:subject"
-          element={
-            isLoggedIn() ? <QuizPage /> : <Navigate to="/login" />
-          }
+          path="/quiz-list"
+          element={<ProtectedRoute><QuizListPage /></ProtectedRoute>}
         />
 
         <Route
-          path="/result"
-          element={
-            isLoggedIn() ? <ResultPage /> : <Navigate to="/login" />
-          }
+          path="/quiz/:id"
+          element={<ProtectedRoute><QuizPage /></ProtectedRoute>}
         />
 
-        {/* Admin */}
         <Route
-          path="/admin"
-          element={
-            isLoggedIn() ? <AdminPage /> : <Navigate to="/login" />
-          }
+          path="/results"
+          element={<ProtectedRoute><ResultPage /></ProtectedRoute>}
         />
 
-        {/* User Dashboard */}
+        {/* Extra pages in pages folder */}
+        <Route
+          path="/home"
+          element={<ProtectedRoute><Home /></ProtectedRoute>}
+        />
         <Route
           path="/user"
-          element={
-            isLoggedIn() ? <UserPage /> : <Navigate to="/login" />
-          }
+          element={<ProtectedRoute><UserPage /></ProtectedRoute>}
+        />
+        <Route
+          path="/admin"
+          element={<ProtectedRoute><AdminPage /></ProtectedRoute>}
         />
 
       </Routes>
     </Router>
   );
 }
-
-export default App;

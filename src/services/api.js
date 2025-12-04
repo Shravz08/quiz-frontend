@@ -1,17 +1,17 @@
 import axios from "axios";
-import { authHeader } from "./AuthService";
+import { API_BASE_URL } from "./config";
 
-const API = axios.create({
-  baseURL: "http://localhost:8082/api",
+const api = axios.create({
+  baseURL: API_BASE_URL,  // example: http://localhost:8082/api
 });
 
-// Attach token automatically
-API.interceptors.request.use((config) => {
-  config.headers = {
-    ...config.headers,
-    ...authHeader(),
-  };
+// attach token automatically
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
-export default API;
+export default api;

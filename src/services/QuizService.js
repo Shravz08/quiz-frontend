@@ -1,43 +1,21 @@
-import api from "./api";
+import axios from "axios";
 
-// ✅ Fetch all quizzes
-export const getAllQuizzes = async () => {
-  const response = await api.get("/quiz");
-  return response.data;
-};
+const api = axios.create({
+  baseURL: "http://localhost:8082/api",
+});
 
-// ✅ Fetch quiz by ID
-export const getQuizById = async (id) => {
-  const response = await api.get(`/quiz/${id}`);
-  return response.data;
-};
+// 🔐 Attach token to every request
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
 
-// ✅ Add a new quiz
-export const addQuiz = async (quiz) => {
-  const response = await api.post("/quiz", quiz);
-  return response.data;
-};
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
-// ✅ Update an existing quiz
-export const updateQuiz = async (id, quiz) => {
-  const response = await api.put(`/quiz/${id}`, quiz);
-  return response.data;
-};
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// ✅ Delete a quiz
-export const deleteQuiz = async (id) => {
-  const response = await api.delete(`/quiz/${id}`);
-  return response.data;
-};
-
-// ✅ Start a quiz by category
-export const startQuiz = async (category) => {
-  const response = await api.get(`/quiz/start?category=${category}`);
-  return response.data;
-};
-
-// ✅ Submit quiz answers
-export const submitQuiz = async (quizId, answers) => {
-  const response = await api.post(`/quiz/${quizId}/submit`, { answers });
-  return response.data;
-};
+export default api;
