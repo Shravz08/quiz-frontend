@@ -13,6 +13,8 @@ import SubjectPage from "./components/SubjectPage";
 import ForgotPassword from "./components/ForgotPassword";
 import WelcomePage from "./components/WelcomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminLayout from "./components/AdminLayout";
+import AdminQuizCRUD from "./pages/AdminQuizCRUD";
 
 // Pages folder
 import Home from "./pages/Home";
@@ -29,6 +31,12 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/admin/quizzes" element={<AdminQuizCRUD />} />
+        <Route path="/admin/quizzes" element={<QuizList />} />
+        <Route path="/admin/quizzes/create" element={<CreateQuiz />} />
+        <Route path="/admin/quizzes/edit/:id" element={<EditQuiz />} />
+        <Route path="/admin/quizzes/delete/:id" element={<DeleteQuiz />} />
+
 
         {/* Protected Pages */}
         <Route
@@ -73,6 +81,10 @@ export default function App() {
           path="/admin"
           element={<ProtectedRoute><AdminPage /></ProtectedRoute>}
         />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="quizzes" element={<AdminQuizCRUD />} />
+        </Route>
 
       </Routes>
     </Router>

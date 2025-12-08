@@ -1,55 +1,30 @@
+// src/components/Sidebar.jsx
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { Menu, Home, FileText, Layers, Plus } from "lucide-react";
 
-const Sidebar = ({ onLogout }) => {
-  const [open, setOpen] = useState(false);
-
+export default function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
   return (
-    <>
-      {/* Hamburger Button */}
-      <button
-        className="hamburger"
-        onClick={() => setOpen(true)}
-      >
-        ☰
-      </button>
+    <aside className={`flex flex-col p-4 bg-white dark:bg-gray-800 ${collapsed ? "w-20" : "w-64"}`}>
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-blue-600 text-white rounded"><Home size={18} /></div>
+        {!collapsed && <h1 className="text-lg font-semibold">Quiz Admin</h1>}
+        <button onClick={() => setCollapsed(s => !s)} className="ml-auto"><Menu size={16} /></button>
+      </div>
 
-      {/* Sidebar Panel */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="sidebar"
-            initial={{ x: -300 }}
-            animate={{ x: 0 }}
-            exit={{ x: -300 }}
-            transition={{ duration: 0.3 }}
-          >
-            <h2 className="sidebar-logo">Quiz App</h2>
+      <nav className="mt-6 flex-1">
+        <ul className="flex flex-col gap-1">
+          <li><Link to="/admin" className="p-2 rounded hover:bg-gray-100">Dashboard</Link></li>
+          <li><Link to="/admin/quizzes" className="p-2 rounded hover:bg-gray-100">Quizzes</Link></li>
+          <li><Link to="/admin/questions" className="p-2 rounded hover:bg-gray-100">Questions</Link></li>
+          <li><Link to="/admin/options" className="p-2 rounded hover:bg-gray-100">Options</Link></li>
+        </ul>
+      </nav>
 
-            <Link to="/" className="sidebar-link" onClick={() => setOpen(false)}>
-              🏠 Home
-            </Link>
-
-            <Link to="/quizlist" className="sidebar-link" onClick={() => setOpen(false)}>
-              📝 Quiz List
-            </Link>
-
-            <Link to="/profile" className="sidebar-link" onClick={() => setOpen(false)}>
-              👤 Profile
-            </Link>
-
-            <button className="sidebar-link logout-btn" onClick={onLogout}>
-              🚪 Logout
-            </button>
-
-            {/* Close button */}
-            <button className="close-btn" onClick={() => setOpen(false)}>✕</button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+      <div className="mt-auto">
+        <button className="w-full p-2 rounded hover:bg-gray-100">Logout</button>
+      </div>
+    </aside>
   );
-};
-
-export default Sidebar;
+}
